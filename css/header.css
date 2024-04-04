@@ -1,0 +1,46 @@
+.header-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 10px;
+  border-bottom: 1px solid #d3d6da;
+}
+
+.header-menu {
+  width: 35px;
+  height: 35px;
+}
+
+.header-wordle {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.header__icons-subscribe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.header__icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.header__icons--img {
+  width: 35px;
+  height: 35px;
+}
+
+.header-subscribe {
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 12px;
+}
