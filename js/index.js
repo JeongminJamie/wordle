@@ -1,4 +1,4 @@
-const 정답 = "APPLE";
+const answer = "APPLE";
 
 let index = 0;
 let attempts = 0;
@@ -16,6 +16,11 @@ const appStart = () => {
   const gameover = () => {
     //기존의 이벤트리스너를 없애주는 역할(키가 안 먹는 역할)
     window.removeEventListener("keydown", handleKeyDown);
+
+    document
+      .querySelector(".keyboard-block")
+      .removeEventListener("click", handleClick);
+
     displayGameOver();
     //setInterval을 종료
     clearInterval(timer);
@@ -28,30 +33,41 @@ const appStart = () => {
   };
 
   const handleEnter = () => {
-    let 맞은_갯수 = 0;
+    let count_correction = 0;
 
     for (let i = 0; i < 5; i++) {
       const block = document.querySelector(
         `.board-block[data-index='${attempts}${i}']`
       );
-      const 입력한_글자 = block.innerText;
-      const 정답_글자 = 정답[i];
+      const input_letter = block.innerText;
+      const answer_letter = answer[i];
 
       // 정답과 입력한 글자의 인덱스 정답 유무를 확인하는 조건문
-      if (입력한_글자 === 정답_글자) {
+      if (input_letter === answer_letter) {
         block.style.background = "green";
-        맞은_갯수 += 1;
+        count_correction += 1;
+        block.animate(
+          [
+            { transform: "rotate(0) scale(1)" },
+            { transform: "rotate(360deg) scale(0)" },
+          ],
+          {
+            duration: 2000,
+            iterations: 1,
+          }
+        );
       } //정답과 같지는 않지만 정답의 일부와 맞는지 확인
-      else if (정답.includes(입력한_글자)) {
+      else if (answer.includes(input_letter)) {
         block.style.background = "aqua";
       } else {
         //정답의 알파벳과 맞지 않은 블럭
         block.style.background = "gray";
       }
-      // 정답을 입력하기 전의 초기 상태
-      block.style.color = "white";
     }
-    if (맞은_갯수 === 5) {
+    if (count_correction === 5) {
+      const block = document.querySelector(
+        `.board-block[data-index='${attempts}${index}']`
+      );
       gameover();
     } else nextLine();
   };
@@ -89,15 +105,35 @@ const appStart = () => {
     }
   };
 
+  //키보드
+  const handleClick = (event) => {
+    const keyValue = event.target.dataset["key"];
+
+    const thisBlock = document.querySelector(
+      `.board-block[data-index='${attempts}${index}']`
+    );
+
+    if (keyValue === "BACK") {
+      handleKeyboardBack();
+    } else if (index === 5) {
+      if (keyValue === "Enter") {
+        handleEnter();
+      } else return;
+    } else if (keyValue !== null && keyValue.length > 0) {
+      thisBlock.innerText = keyValue;
+      index += 1;
+    }
+  };
+
   const startTimer = () => {
-    const 시작_시간 = new Date();
+    const start_time = new Date();
 
     const setTime = () => {
-      const 현재_시간 = new Date();
-      const 흐른_시간 = new Date(현재_시간 - 시작_시간);
+      const time_now = new Date();
+      const pasted_time = new Date(time_now - start_time);
 
-      const minute = 흐른_시간.getMinutes().toString();
-      const second = 흐른_시간.getSeconds().toString();
+      const minute = pasted_time.getMinutes().toString();
+      const second = pasted_time.getSeconds().toString();
       const timerDiv = document.querySelector("#timer");
       timerDiv.innerText = `${minute.padStart(2, "0")}:${second.padStart(
         2,
@@ -109,7 +145,11 @@ const appStart = () => {
   };
 
   startTimer();
+
   window.addEventListener("keydown", handleKeyDown);
+  document
+    .querySelectorAll(".keyboard-block")
+    .forEach((key) => key.addEventListener("click", handleClick));
 };
 
 appStart();
